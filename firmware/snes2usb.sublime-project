@@ -1,0 +1,9 @@
+{
+	"folders":
+	[
+		{
+			"path": "/home/chiva/Dropbox/Trabajos/Programas/Arduino/SNES2USB/firmware",
+			"file_exclude_patterns": ["*.sublime*"]
+		}
+	]
+}

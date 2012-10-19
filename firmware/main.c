@@ -35,7 +35,7 @@ static inline void snesLatchLow()  { PORTB &= ~snesLatch; }
 static inline void snesLatchHigh() { PORTB |= snesLatch; }
 static inline void snesClockLow()  { PORTB &= ~snesClock; }
 static inline void snesClockHigh() { PORTB |= snesClock; }
-static inline unsigned char snesGetData()	{ return PINB & snesData; }
+static inline unsigned char snesGetData()   { return PINB & snesData; }
 
 typedef struct{
     unsigned char x;
@@ -52,75 +52,75 @@ static void readSNES(void);
 static char changedSNES(void);
 
 PROGMEM char usbHidReportDescriptor[USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH] = { /* USB report descriptor */
-	0x05, 0x01,        // USAGE_PAGE (Generic Desktop)
-	0x09, 0x05,        // USAGE (Game Pad)
-	0xa1, 0x01,        // COLLECTION (Application)
-	0x09, 0x01,        //   USAGE (Pointer)
-	0xa1, 0x00,        //   COLLECTION (Physical)
-	0x09, 0x30,        //     USAGE (X)
-	0x09, 0x31,        //     USAGE (Y)
-	0x15, 0x00,        //   LOGICAL_MINIMUM (0)
-	0x26, 0xff, 0x00,  //     LOGICAL_MAXIMUM (255)
-	0x75, 0x08,        //   REPORT_SIZE (8)
-	0x95, 0x02,        //   REPORT_COUNT (2)
-	0x81, 0x02,        //   INPUT (Data,Var,Abs)
-	0xc0,              // END_COLLECTION*/
-	0x05, 0x09,        // USAGE_PAGE (Button)
-	0x19, 0x01,        //   USAGE_MINIMUM (Button 1)
-	0x29, 0x08,        //   USAGE_MAXIMUM (Button 8)
-	0x15, 0x00,        //   LOGICAL_MINIMUM (0)
-	0x25, 0x01,        //   LOGICAL_MAXIMUM (1)
-	0x75, 0x01,        // REPORT_SIZE (1)
-	0x95, 0x08,        // REPORT_COUNT (8)
-	0x81, 0x02,        // INPUT (Data,Var,Abs)
-	0xc0               // END_COLLECTION
+    0x05, 0x01,        // USAGE_PAGE (Generic Desktop)
+    0x09, 0x05,        // USAGE (Game Pad)
+    0xa1, 0x01,        // COLLECTION (Application)
+    0x09, 0x01,        //   USAGE (Pointer)
+    0xa1, 0x00,        //   COLLECTION (Physical)
+    0x09, 0x30,        //     USAGE (X)
+    0x09, 0x31,        //     USAGE (Y)
+    0x15, 0x00,        //   LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,  //     LOGICAL_MAXIMUM (255)
+    0x75, 0x08,        //   REPORT_SIZE (8)
+    0x95, 0x02,        //   REPORT_COUNT (2)
+    0x81, 0x02,        //   INPUT (Data,Var,Abs)
+    0xc0,              // END_COLLECTION*/
+    0x05, 0x09,        // USAGE_PAGE (Button)
+    0x19, 0x01,        //   USAGE_MINIMUM (Button 1)
+    0x29, 0x08,        //   USAGE_MAXIMUM (Button 8)
+    0x15, 0x00,        //   LOGICAL_MINIMUM (0)
+    0x25, 0x01,        //   LOGICAL_MAXIMUM (1)
+    0x75, 0x01,        // REPORT_SIZE (1)
+    0x95, 0x08,        // REPORT_COUNT (8)
+    0x81, 0x02,        // INPUT (Data,Var,Abs)
+    0xc0               // END_COLLECTION
 };
 
 static void readSNES(void) {
-	uchar tmp=0;
+    uchar tmp=0;
 
-	snesLatchHigh();
-	_delay_us(12);
-	snesLatchLow();
+    snesLatchHigh();
+    _delay_us(12);
+    snesLatchLow();
 
-	uchar i = 16;
-	while(i) {
-		i--;
+    uchar i = 16;
+    while(i) {
+        i--;
 
-		_delay_us(6);
-		snesClockLow();
-		
-		tmp <<= 1;	
-		if(!snesGetData()) tmp++; 
+        _delay_us(6);
+        snesClockLow();
+        
+        tmp <<= 1;  
+        if(!snesGetData()) tmp++; 
 
-		_delay_us(6);
-		
-		snesClockHigh();
+        _delay_us(6);
+        
+        snesClockHigh();
 
-		if(i == 8) lastRead[0] = tmp;
-	}
-	lastRead[1] = tmp;
+        if(i == 8) lastRead[0] = tmp;
+    }
+    lastRead[1] = tmp;
 }
 
 static char changedSNES(void) {
-	if(lastRead[0] == lastReported[0] &&
-	   lastRead[1] == lastReported[1]) return 0;
-	
-	return 1;
+    if(lastRead[0] == lastReported[0] &&
+       lastRead[1] == lastReported[1]) return 0;
+    
+    return 1;
 }
 
 static void buildReport(void) {
-	char x, y;
-	unsigned char lrcb1, lrcb2, button, buttonNew, i, temp;
+    char x, y;
+    unsigned char lrcb1, lrcb2, button, buttonNew, i, temp;
 
-	lastReported[0] = lrcb1 = lastRead[0];
-	lastReported[1] = lrcb2 = lastRead[1];
+    lastReported[0] = lrcb1 = lastRead[0];
+    lastReported[1] = lrcb2 = lastRead[1];
 
-	y = x = 128;
-	if(lrcb1 & 0x01) x = 255;
-	if(lrcb1 & 0x02) x = 0;
-	if(lrcb1 & 0x04) y = 255;
-	if(lrcb1 & 0x08) y = 0;
+    y = x = 128;
+    if(lrcb1 & 0x01) x = 255;
+    if(lrcb1 & 0x02) x = 0;
+    if(lrcb1 & 0x04) y = 255;
+    if(lrcb1 & 0x08) y = 0;
 
     button = (lrcb1 & 0xF0) | (lrcb2 >> 4);
     buttonNew = 0;
@@ -132,9 +132,9 @@ static void buildReport(void) {
         buttonNew |= temp;
     }
 
-	reportBuffer.x = x;
-	reportBuffer.y = y;
-	reportBuffer.buttons = buttonNew;
+    reportBuffer.x = x;
+    reportBuffer.y = y;
+    reportBuffer.buttons = buttonNew;
 }
 
 usbMsgLen_t usbFunctionSetup(uchar data[8])
@@ -222,9 +222,9 @@ int __attribute__((noreturn)) main(void) {
         wdt_reset();
         usbPoll();
 
-		readSNES();
+        readSNES();
 
-		if(usbInterruptIsReady() && changedSNES()){
+        if(usbInterruptIsReady() && changedSNES()){
             buildReport();
             usbSetInterrupt((void *)&reportBuffer, sizeof(reportBuffer));
         }

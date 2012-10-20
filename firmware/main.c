@@ -28,7 +28,7 @@
 const char snesLatch = 1<<PB3;
 const char snesClock = 1<<PB1;
 const char snesData  = 1<<PB4;
-char buttonOrder[]  = {SNES_X, SNES_A, SNES_B, SNES_Y,
+char buttonOrder[]   = {SNES_X, SNES_A, SNES_B, SNES_Y,
                        SNES_L, SNES_R, SNES_SELECT, SNES_START};
 
 static inline void snesLatchLow()  { PORTB &= ~snesLatch; }
@@ -77,24 +77,20 @@ PROGMEM char usbHidReportDescriptor[USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH] = { /*
 };
 
 static void readSNES(void) {
-    uchar tmp=0;
+    unsigned char i, tmp=0;
 
     snesLatchHigh();
     _delay_us(12);
     snesLatchLow();
 
-    uchar i = 16;
-    while(i) {
-        i--;
-
+    for(i=16;i>0;--i) {
         _delay_us(6);
         snesClockLow();
-        
+
         tmp <<= 1;  
         if(!snesGetData()) tmp++; 
 
         _delay_us(6);
-        
         snesClockHigh();
 
         if(i == 8) lastRead[0] = tmp;
@@ -105,7 +101,6 @@ static void readSNES(void) {
 static char changedSNES(void) {
     if(lastRead[0] == lastReported[0] &&
        lastRead[1] == lastReported[1]) return 0;
-    
     return 1;
 }
 
@@ -160,8 +155,6 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
     }
     return 0;   /* default for not implemented requests: return no data back to host */
 }
-
-#define abs(x) ((x) > 0 ? (x) : (-x))
 
 // Called by V-USB after device reset
 void hadUsbReset() {
@@ -221,9 +214,7 @@ int __attribute__((noreturn)) main(void) {
     for(;;) { //main event loop
         wdt_reset();
         usbPoll();
-
         readSNES();
-
         if(usbInterruptIsReady() && changedSNES()){
             buildReport();
             usbSetInterrupt((void *)&reportBuffer, sizeof(reportBuffer));

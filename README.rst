@@ -40,9 +40,9 @@ The board files under the `schematic` folder have been designed using DipTrace_,
 
 All parts are standard and common, they could be found on eBay at the time of the writing, so no need to buy from specialized distributors with high shipping costs.
 
-============  ========  ============   ========
+============  ========  =============  ========
 Description   Value     Pad            Quantity
-============  ========  ============   ========
+============  ========  =============  ========
 uController   ATtiny45  SOIC           1
 Resistor      68 Ohm    0805           2
 Resistor      1.5 kOhm  0805           1

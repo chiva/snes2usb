@@ -21,22 +21,22 @@ Firmware
 
 Firmware has been developed using the latest V-USB and avr-gcc version available at the moment under Ubuntu.
 
-The hex file the ATtiny45 requires to work is already compiled and stored at the `firmware` folder, called `main.hex`.
+The hex file the ATtiny45 requires to work is already compiled and stored at the ``firmware`` folder, called ``main.hex``.
 
-To download the firmware to the target, you should have at least `make` and `avrdude` in any platform, to install them under Ubuntu::
+To download the firmware to the target, you should have at least ``make`` and ``avrdude`` installed in any platform, to install them under Ubuntu::
 
-    sudo apt-get -y install make avrdude
+    sudo apt-get install make avrdude
 
 By default, the makefile is configured to program the target using USBasp, so if you have a different programmer, please modify the avrdude line to suit your needs.
 
-Now you can upload the firmware to the target issuing::
+Now you can download the firmware to the target issuing::
 
     sudo make program
 
 PCB Board
 ---------
 
-The board files under the `schematic` folder have been designed using DipTrace_, but PDF with schematic and gerbers have been exported so there is no need to use the software, unless you want to modify it.
+The board files under the ``schematic`` folder have been designed using DipTrace_, but PDF with schematic and gerbers have been exported so there is no need to use the software, unless you want to modify it.
 
 All parts are standard and common, they could be found on eBay at the time of the writing, so no need to buy from specialized distributors with high shipping costs.
 

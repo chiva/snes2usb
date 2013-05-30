@@ -36,9 +36,9 @@ Now you can download the firmware to the target issuing::
 PCB Board
 ---------
 
-The board files under the ``schematic`` folder have been designed using DipTrace_, but PDF with schematic and gerbers have been exported so there is no need to use the software, unless you want to modify it.
+The board files under the ``schematic`` folder have been designed using DipTrace_. PDF with schematic and gerbers have been exported so there is no need to use the software, unless you want to modify them.
 
-All parts are standard and common, they could be found on eBay at the time of the writing, so no need to buy from specialized distributors with high shipping costs.
+All parts are standard and common, they could be found on eBay at the time of the writing, that way, specialized distributors with high shipping costs can be avoided.
 
 ============  ========  =============  ========
 Description   Value     Pad            Quantity

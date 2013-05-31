@@ -79,27 +79,27 @@ const PROGMEM char usbHidReportDescriptor[USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH] 
 static void readSNES(void) {
     // Emulate SNES gamepad protocol to read the status of the buttons
     // http://www.gamefaqs.com/snes/916396-snes/faqs/5395
-	unsigned char i=16, tmp=0;
+    unsigned char i=16, tmp=0;
 
-	snesLatchHigh();
-	_delay_us(12);
-	snesLatchLow();
+    snesLatchHigh();
+    _delay_us(12);
+    snesLatchLow();
 
-	while(i) {
-		i--;
+    while(i) {
+        i--;
 
-		_delay_us(6);
-		snesClockLow();
-		
-		tmp <<= 1;	
-		if(!snesGetData()) tmp++; 
+        _delay_us(6);
+        snesClockLow();
+        
+        tmp <<= 1;	
+        if(!snesGetData()) tmp++; 
 
-		_delay_us(6);		
-		snesClockHigh();
+        _delay_us(6);		
+        snesClockHigh();
 
-		if(i == 8) lastRead[0] = tmp;
-	}
-	lastRead[1] = tmp;
+        if(i == 8) lastRead[0] = tmp;
+    }
+    lastRead[1] = tmp;
 }
 
 static char changedSNES(void) {

@@ -28,6 +28,7 @@
 const char snesLatch = 1<<PB3;
 const char snesClock = 1<<PB1;
 const char snesData  = 1<<PB4;
+// Customize the order in which buttons will be reported
 char buttonOrder[]   = {SNES_X, SNES_A, SNES_B, SNES_Y,
                        SNES_L, SNES_R, SNES_SELECT, SNES_START};
 
@@ -37,16 +38,15 @@ static inline void snesClockLow()  { PORTB &= ~snesClock; }
 static inline void snesClockHigh() { PORTB |= snesClock; }
 static inline unsigned char snesGetData()   { return PINB & snesData; }
 
-typedef struct{
+struct{
     unsigned char x;
     unsigned char y;
     unsigned char buttons;
-}report_t;
+}reportBuffer;                   /* buffer for HID reports */
 
 static unsigned char lastRead[2];
 static unsigned char lastReported[2];
-static report_t reportBuffer;    /* buffer for HID reports */
-static uchar idleRate;           /* in 4 ms units */
+static unsigned char idleRate;           /* in 4 ms units */
 
 static void readSNES(void);
 static char changedSNES(void);
@@ -77,6 +77,8 @@ const PROGMEM char usbHidReportDescriptor[USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH] 
 };
 
 static void readSNES(void) {
+    // Emulate SNES gamepad protocol to read the status of the buttons
+    // http://www.gamefaqs.com/snes/916396-snes/faqs/5395
 	unsigned char i=16, tmp=0;
 
 	snesLatchHigh();
@@ -108,10 +110,10 @@ static char changedSNES(void) {
 
 static void buildReport(void) {
     char x, y;
-    unsigned char lrcb1, lrcb2, button, buttonNew, i, temp;
+    unsigned char lrcb1, lrcb2, button, i, temp, buttonNew=0;
 
-    lastReported[0] = lrcb1 = lastRead[0];
-    lastReported[1] = lrcb2 = lastRead[1];
+    lastReported[0] = lrcb1 = lastRead[0];  // B,Y,Select,Start,Up,Down,Left,Right
+    lastReported[1] = lrcb2 = lastRead[1];  // A,X,L,R,-,-,-,-
 
     y = x = 128;
     if(lrcb1 & 0x01) x = 255;
@@ -119,13 +121,14 @@ static void buildReport(void) {
     if(lrcb1 & 0x04) y = 255;
     if(lrcb1 & 0x08) y = 0;
 
+    // Discard axis info and put 8 buttons state in a byte
     button = (lrcb1 & 0xF0) | (lrcb2 >> 4);
-    buttonNew = 0;
 
+    // Order the buttons as stated at the beginning
     for(i=0; i<8; i++) {
-        temp = button & (1<<((8-buttonOrder[i])));
-        temp >>= 8-buttonOrder[i];
-        temp <<= i;
+        temp = button & (1<<((8-buttonOrder[i])));  // Take the state of the button
+        temp >>= 8-buttonOrder[i];                  // Bring it to the first bit
+        temp <<= i;                                 // Put it at the desired bit
         buttonNew |= temp;
     }
 
@@ -134,9 +137,9 @@ static void buildReport(void) {
     reportBuffer.buttons = buttonNew;
 }
 
-usbMsgLen_t usbFunctionSetup(uchar data[8])
+usbMsgLen_t usbFunctionSetup(unsigned char data[8])
 {
-    usbRequest_t    *rq = (void *)data;
+    usbRequest_t *rq = (void *)data;
 
     /* The following requests are never used. But since they are required by
      * the specification, we implement them in this example.
@@ -159,9 +162,10 @@ usbMsgLen_t usbFunctionSetup(uchar data[8])
 }
 
 // Called by V-USB after device reset
+// Calibrate RC clock with the 1ms frame on USB reset
 void hadUsbReset() {
-    uchar step = 128;
-    uchar trialValue = 0, optimumValue;
+    unsigned char step = 128;
+    unsigned char trialValue = 0, optimumValue;
     int   x, optimumDev, targetValue = (unsigned)(1499 * (double)F_CPU / 10.5e6 + 0.5);
  
     /* do a binary search: */
@@ -189,7 +193,7 @@ void hadUsbReset() {
 }
 
 int __attribute__((noreturn)) main(void) {
-    uchar   i;
+    unsigned char i;
 
     wdt_enable(WDTO_1S);
     /* Even if you don't use the watchdog, turn it off here. On newer devices,
@@ -200,7 +204,7 @@ int __attribute__((noreturn)) main(void) {
      * additional hardware initialization.
      */
 
-    //Init SNES-Controller + Reset 
+    //Init SNES-Controller
     DDRB = snesLatch | snesClock;
 
     usbInit();
@@ -217,6 +221,7 @@ int __attribute__((noreturn)) main(void) {
         wdt_reset();
         usbPoll();
         readSNES();
+        // Only report if buttons state have changed
         if(usbInterruptIsReady() && changedSNES()){
             buildReport();
             usbSetInterrupt((void *)&reportBuffer, sizeof(reportBuffer));

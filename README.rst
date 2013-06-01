@@ -6,7 +6,9 @@ A SNES game controller to USB converter.
 Now you can use the reliable, long-lasting SNES controller with your computer games and enjoy that retro-feeling!
 
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/gamepad-inside.jpg
+   :align: left
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/detail.jpg
+   :align: right
 
 Instructions
 ------------
@@ -42,8 +44,10 @@ PCB Board
 The board files under the ``schematic`` folder have been designed using DipTrace_. PDF with schematic and gerbers have been exported so there is no need to use the software, unless you want to modify them.
 
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/pcb-front.jpg
+   :align: left
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/pcb-back.jpg
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/pcb-mounted.jpg
+   :align: right
 
 All parts are standard and common, they could be found on eBay at the time of the writing, that way, specialized distributors with high shipping costs can be avoided.
 

@@ -7,6 +7,7 @@ Now you can use the reliable, long-lasting SNES controller with your computer ga
 
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/gamepad-inside.jpg
    :align: left
+   :target: http://www.google.es
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/detail.jpg
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/gamepad.jpg
    :align: right

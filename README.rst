@@ -7,10 +7,14 @@ Now you can use the reliable, long-lasting SNES controller with your computer ga
 
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/gamepad-inside.jpg
    :align: left
-   :target: http://www.google.es
+   :target: https://raw.github.com/chiva/snes2usb/gh-pages/images/big/gamepad-inside.jpg
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/detail.jpg
+   :target: https://raw.github.com/chiva/snes2usb/gh-pages/images/big/detail.jpg
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/gamepad.jpg
    :align: right
+   :target: https://raw.github.com/chiva/snes2usb/gh-pages/images/big/gamepad.jpg
+
+The objective of this project is to achieve the smallest and cheapest SNES gamepad to usb converter with the most common and easy to get components.
 
 Instructions
 ------------
@@ -47,9 +51,12 @@ The board files under the ``schematic`` folder have been designed using DipTrace
 
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/pcb-front.jpg
    :align: left
+   :target: https://raw.github.com/chiva/snes2usb/gh-pages/images/big/pcb-front.jpg
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/pcb-back.jpg
+   :target: https://raw.github.com/chiva/snes2usb/gh-pages/images/big/pcb-back.jpg
 .. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/pcb-mounted.jpg
    :align: right
+   :target: https://raw.github.com/chiva/snes2usb/gh-pages/images/big/pcb-mounted.jpg
 
 All parts are standard and common, they could be found on eBay at the time of the writing, that way, specialized distributors with high shipping costs can be avoided.
 

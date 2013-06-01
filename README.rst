@@ -5,6 +5,9 @@ A SNES game controller to USB converter.
 
 Now you can use the reliable, long-lasting SNES controller with your computer games and enjoy that retro-feeling!
 
+.. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/gamepad-inside.jpg
+.. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/detail.jpg
+
 Instructions
 ------------
 
@@ -21,22 +24,26 @@ Firmware
 
 Firmware has been developed using the latest V-USB and avr-gcc version available at the moment under Ubuntu.
 
-The hex file the ATtiny45 requires to work is already compiled and stored at the ``firmware`` folder, called ``main.hex``.
+The hex file the ATtiny45 requires to work is already compiled and stored inside the ``firmware`` folder, it's called ``main.hex``.
 
-To download the firmware to the target, you should have at least ``make`` and ``avrdude`` installed in any platform, to install them under Ubuntu::
+To download the firmware to the target, you should have at least ``avrdude`` installed in any platform, to install them under Ubuntu::
 
-    sudo apt-get install make avrdude
+    $ sudo apt-get install avrdude
 
-By default, the makefile is configured to program the target using USBasp, so if you have a different programmer, please modify the avrdude line to suit your needs.
+One of the cheapest programmers os the USBasp, but if you have a different one, please modify the avrdude line to suit your needs.
 
 Now you can download the firmware to the target issuing::
 
-    sudo make program
+    $ avrdude -c usbasp -p attiny45 -U flash:w:main.hex:i
 
 PCB Board
 ---------
 
 The board files under the ``schematic`` folder have been designed using DipTrace_. PDF with schematic and gerbers have been exported so there is no need to use the software, unless you want to modify them.
+
+.. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/pcb-front.jpg
+.. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/pcb-back.jpg
+.. image:: https://raw.github.com/chiva/snes2usb/gh-pages/images/pcb-mounted.jpg
 
 All parts are standard and common, they could be found on eBay at the time of the writing, that way, specialized distributors with high shipping costs can be avoided.
 
@@ -59,4 +66,4 @@ Thanks to
 Based and improved from source code found at:
 http://www.instructables.com/id/USB-SNES-Controller/
 
-Special thanks to: timeblade0, blackowaya and andreq.
+Special thanks to: andreq, timeblade0 and blackowaya.
